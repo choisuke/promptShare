@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prompt Share</title>
+</head>
+<body>
+<h1>Prompt Share</h1>
+{% if user %}
+<p>Logged in as {{ user.name }} | <a href="{{ url_for('logout') }}">Logout</a></p>
+<form action="{{ url_for('post_prompt') }}" method="post">
+  <textarea name="content" rows="4" cols="50" placeholder="Write your prompt here"></textarea><br>
+  <button type="submit">Post</button>
+</form>
+{% else %}
+<p><a href="{{ url_for('login') }}">Login with Okta</a> to post</p>
+{% endif %}
+<hr>
+{% for p in prompts %}
+<div>
+  <p>{{ p.content }}</p>
+  <form action="{{ url_for('like_prompt', pid=p.id) }}" method="post" style="display:inline">
+    <button type="submit">Like ({{ p.likes }})</button>
+  </form>
+  <div>
+    <form action="{{ url_for('comment_prompt', pid=p.id) }}" method="post">
+      <input type="text" name="comment" placeholder="Add comment">
+      <button type="submit">Comment</button>
+    </form>
+  </div>
+  <ul>
+    {% for c in p.comments %}
+    <li>{{ c.user }}: {{ c.text }}</li>
+    {% endfor %}
+  </ul>
+</div>
+<hr>
+{% endfor %}
+</body>
+</html>
