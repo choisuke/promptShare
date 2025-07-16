@@ -20,7 +20,6 @@ def get_okta_auth():
     )
     return okta
 
-
 DB_PATH = os.environ.get('PROMPT_DB', 'prompts.db')
 
 def get_db():
