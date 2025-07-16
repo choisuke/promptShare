@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prompt Detail</title>
+</head>
+<body>
+<h1>Prompt Detail</h1>
+<p><a href="{{ url_for('index') }}">Back</a></p>
+<div>
+  <p><strong>Prompt:</strong> {{ prompt.content }}</p>
+  <p><strong>Type:</strong> {{ prompt.work_type }}</p>
+  <p><strong>Summary:</strong> {{ prompt.summary }}</p>
+  <p><strong>Expected:</strong> {{ prompt.expected }}</p>
+  <p><strong>Posted by:</strong> {{ prompt.user }}</p>
+  <form action="{{ url_for('like_prompt', pid=prompt.id) }}" method="post" style="display:inline">
+    <button type="submit">👍 ({{ prompt.likes }})</button>
+  </form>
+  <ul>
+    {% for c in prompt.comments %}
+    <li>{{ c.user }}: {{ c.text }}</li>
+    {% endfor %}
+  </ul>
+  <form action="{{ url_for('comment_prompt', pid=prompt.id) }}" method="post">
+    <input type="text" name="comment" placeholder="Add comment">
+    <button type="submit">Comment</button>
+  </form>
+</div>
+</body>
+</html>

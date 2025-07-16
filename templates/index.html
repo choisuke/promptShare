@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prompt Share</title>
+</head>
+<body>
+<h1>Prompt Share</h1>
+{% if user %}
+<p>Logged in as {{ user.name }} | <a href="{{ url_for('logout') }}">Logout</a></p>
+<form action="{{ url_for('post_prompt') }}" method="post">
+  <textarea name="content" rows="4" cols="50" placeholder="Prompt"></textarea><br>
+  <select name="work_type">
+    <option value="writing">Writing</option>
+    <option value="research">Research</option>
+    <option value="coding">Coding</option>
+  </select><br>
+  <input type="text" name="summary" placeholder="Summary"><br>
+  <input type="text" name="expected" placeholder="Expected result"><br>
+  <button type="submit">Post</button>
+</form>
+{% else %}
+<p><a href="{{ url_for('login') }}">Login with Okta</a> to post</p>
+{% endif %}
+<hr>
+{% for work_type, plist in prompts_by_type.items() %}
+<h2>{{ work_type }}</h2>
+  {% for p in plist %}
+  <div>
+    <p><a href="{{ url_for('view_prompt', pid=p.id) }}">{{ p.content }}</a></p>
+    <form action="{{ url_for('like_prompt', pid=p.id) }}" method="post" style="display:inline">
+      <button type="submit">👍 ({{ p.likes }})</button>
+    </form>
+    <ul>
+      {% for c in p.comments %}
+      <li>{{ c.user }}: {{ c.text }}</li>
+      {% endfor %}
+    </ul>
+    <form action="{{ url_for('comment_prompt', pid=p.id) }}" method="post">
+      <input type="text" name="comment" placeholder="Add comment">
+      <button type="submit">Comment</button>
+    </form>
+  </div>
+  <hr>
+  {% endfor %}
+{% endfor %}
+</body>
+</html>
